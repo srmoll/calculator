@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <title>JavaScript Calculator</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <main>
+        <body>
+            <h1>Calculator</h1>
+            <div id="calc-container">
+                <div id="display">
+                    <div id="display-input"></div>
+                </div>
+                <div id="user-controls">
+                    <!--put clear(), backspace()-->
+                    <button class="user-control" id="clear">clear</button>
+                    <button class="user-control" id="backspace">back</button>
+                    <button class="user-control" id="eval">=</button>
+                </div>
+                <div id="numbers">
+                    <!--put 0-9 buttons-->
+                    <button class= "number" id="0">0</button>
+                    <button class= "number" id="1">1</button>
+                    <button class= "number" id="2">2</button>
+                    <button class= "number" id="3">3</button>
+                    <button class= "number" id="4">4</button>
+                    <button class= "number" id="5">5</button>
+                    <button class= "number" id="6">6</button>
+                    <button class= "number" id="7">7</button>
+                    <button class= "number" id="8">8</button>
+                    <button class= "number" id="9">9</button>
+                </div>
+                <div id="operators">
+                    <!--put *, ^, + - = / %-->
+                    <button class="operator" id="add">+</button>
+                    <button class="operator" id="subtract">-</button>
+                    <button class="operator" id="multiply">x</button>
+                    <button class="operator" id="divide">/</button>
+                    <button class="operator" id="power">^</button>
+                </div>
+            </div>
+        </body>
+    </main>
+    <script>
+        const inputs = [];
+        const display = document.querySelector('#display-input');
+        
+        const clear = document.querySelector('#clear');
+        clear.addEventListener('click', () => {
+            inputs.splice(0, inputs.length);
+            display.textContent = '';
+        });
+
+        const backspace = document.querySelector('#backspace');
+        backspace.addEventListener('click', () => {
+            let len = display.textContent.length;
+            display.textContent = display.textContent.slice(0, len-1);
+            inputs.shift();
+            inputs.push(+display.textContent)
+        });
+
+        const numbers = document.querySelectorAll('.number');
+        for (let i = 0; i < numbers.length; ++i) {
+            numbers[i].addEventListener('click', (e) => {
+                if (e.target.class !== 'operator') {
+                    inputs.push(e.target.innerHTML);
+                    display.textContent = inputs.join('');
+                }
+            });
+        }
+        const operators = document.querySelectorAll('.operator');
+        for (let i = 0; i < operators.length; ++i) {
+            operators[i].addEventListener('click', (e) => {
+                if (inputs.length > 0 && inputs[0].class !== 'operator') {
+                    inputs.push(e.target.innerHTML);
+                    console.log(e.target.innerHTML);
+                }
+                else {
+                    display.textContent = 'Input a number first!'
+                }
+            });
+        }
+
+        const equals = document.querySelector('#eval');
+        equals.addEventListener('click', () => {
+            operate();
+            display.textContent = `${inputs[0]}`;
+        });
+
+        // helpers on 2 inputs
+        function add(a, b) {
+            return +a + +b;
+        }
+
+        function subtract(a, b) {
+            return a - b;
+        }
+
+        function multiply(a, b) {
+            return a * b;
+        }
+
+        function divide(a, b) {
+            if (b !== 0) return a / b;
+        }
+
+        function power(base, exponent) {
+            return base**exponent;
+        }
+
+
+        // takes an array of inputs, then w a pair of inputs, calls relevant operator 
+        function operate() {
+            if (inputs.length < 3) return;
+            
+
+            let result = 0;
+            while (inputs.length > 2) {
+                let first = inputs.shift();
+                let operator = inputs.shift();
+                let second = inputs.shift();
+                if (operator === '+') {
+                    result = add(first, second);
+                }
+                else if (operator === '-') {
+                    result = subtract(first, second);
+                }
+                else if (operator === 'x') {
+                    result = multiply(first, second);
+                }
+                else if (operator === '/') {
+                    result = divide(first, second);
+                }
+                else if (operator === '^') {
+                    result = power(first, second);
+                }
+                inputs.unshift(result);
+            }
+        }
+    </script>
+</html>
