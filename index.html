@@ -43,53 +43,50 @@
     </main>
     <script>
         const inputs = [];
+        const arr = [];
         const display = document.querySelector('#display-input');
         
         const clear = document.querySelector('#clear');
         clear.addEventListener('click', () => {
             inputs.splice(0, inputs.length);
+            arr.splice(0, arr.length);
             display.textContent = '';
         });
-
-        const backspace = document.querySelector('#backspace');
-        backspace.addEventListener('click', () => {
-            let len = display.textContent.length;
-            display.textContent = display.textContent.slice(0, len-1);
-            inputs.shift();
-            inputs.push(+display.textContent)
+        
+        const back = document.querySelector('#backspace');
+        back.addEventListener('click', () => {
+            arr.pop();
+            display.textContent = arr.join('');
         });
+
 
         const numbers = document.querySelectorAll('.number');
         for (let i = 0; i < numbers.length; ++i) {
             numbers[i].addEventListener('click', (e) => {
-                if (e.target.class !== 'operator') {
-                    inputs.push(e.target.innerHTML);
-                    display.textContent = inputs.join('');
-                }
+                arr.push(e.target.innerHTML);
+                let str = arr.join('');
+                display.textContent = str; 
             });
         }
+
         const operators = document.querySelectorAll('.operator');
         for (let i = 0; i < operators.length; ++i) {
             operators[i].addEventListener('click', (e) => {
-                if (inputs.length > 0 && inputs[0].class !== 'operator') {
-                    inputs.push(e.target.innerHTML);
-                    console.log(e.target.innerHTML);
+                if (arr.length < 1) {
+                    display.textContent = 'Need one number first!';
                 }
                 else {
-                    display.textContent = 'Input a number first!'
+                    inputs.push(arr.join(''));
+                    arr.splice(0, arr.length);
+                    display.textContent = '';
+                    op.current = e.target.id;
                 }
             });
         }
 
-        const equals = document.querySelector('#eval');
-        equals.addEventListener('click', () => {
-            operate();
-            display.textContent = `${inputs[0]}`;
-        });
-
         // helpers on 2 inputs
         function add(a, b) {
-            return +a + +b;
+            return Number(a) + Number(b);
         }
 
         function subtract(a, b) {
@@ -110,32 +107,42 @@
 
 
         // takes an array of inputs, then w a pair of inputs, calls relevant operator 
-        function operate() {
-            if (inputs.length < 3) return;
-            
-
-            let result = 0;
-            while (inputs.length > 2) {
-                let first = inputs.shift();
-                let operator = inputs.shift();
-                let second = inputs.shift();
-                if (operator === '+') {
-                    result = add(first, second);
-                }
-                else if (operator === '-') {
-                    result = subtract(first, second);
-                }
-                else if (operator === 'x') {
-                    result = multiply(first, second);
-                }
-                else if (operator === '/') {
-                    result = divide(first, second);
-                }
-                else if (operator === '^') {
-                    result = power(first, second);
-                }
-                inputs.unshift(result);
+        const equals = document.querySelector('#eval');
+        equals.addEventListener('click', () => {
+            inputs.push(arr.join(''));
+            if (inputs.length < 2) {
+                console.log('Need two numbers');
+                return;
             }
-        }
+
+            let res = 0;
+            while (inputs.length > 1) {
+                let first = inputs.shift();
+                let second = inputs.shift();
+
+                if (op.current === 'add') {
+                    res = add(first, second);
+                }
+                else if (op.current === 'subtract') {
+                    res = subtract(first, second);
+                }
+                else if (op.current === 'multiply') {
+                    res = multiply(first, second);
+                }
+                else if (op.current === 'divide') {
+                    res = divide(first, second);
+                }
+                else if (op.current === 'power') {
+                    res = power(first, second);
+                }
+                inputs.unshift(res);
+            }
+            display.textContent = `${inputs[0]}`;
+            console.log(res);
+        });
+
+        op = {
+            current: '',
+        };
     </script>
 </html>

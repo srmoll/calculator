@@ -24,6 +24,7 @@ h1 {
     width: 40vw;
     height: 55vh;
     box-shadow: 10px, slategray;
+    display: grid;
 }
 
 #display {
@@ -44,43 +45,27 @@ h1 {
 }
 
 #numbers {
-    display: inline-flex;
-    justify-items: center;
-    align-items: center;
-    height: 20vh;
-    width: 15vw;
-    margin: 10px 10vw 0px 10px;
+    margin: 10px 10px 10px 10px;
 }
 
 .number {
     box-shadow: 5px, darkslategray;
-    font-size: 6vmin;
-    padding: 0 15 0 15;
+    font-size: 5vmin;
     margin-left: 10px;
+    margin-bottom: 5px;
 }
 
 #operators {
-    display: inline-flex;
-    justify-items: center;
-    align-items: center;
-    height: 15vh;
-    width: 20vw;
-    margin: 0px 10vw 10px 10px;
+    margin: 10px 10px 10px 10px;
 }
 
 .operator {
     box-shadow: 5px, darkslategray;
-    font-size: 6vmin;
+    font-size: 5vmin;
     margin-left: 10px;
-    padding: 0 15 0 15;
 }
 
 #user-controls {
-    display: inline-flex;
-    justify-items: flex-end;
-    align-items: center;
-    height: 20px;
-    width: 20vw;
     margin-left: 25vw;
     margin-top: 10px;
 }
